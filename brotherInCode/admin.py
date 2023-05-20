@@ -9,6 +9,11 @@ class AvaliacaoTutorInline(admin.TabularInline):
     autocomplete_fields = ['id_aluno']
 
 
+class ComprovantePagamentoInline(admin.TabularInline):
+    model = ComprovantePagamento
+    extra = 1
+
+
 class ContasForm(admin.ModelAdmin):
     list_display = ['banco', 'agencia', 'conta', 'tipo']
     list_filter = ['banco', 'tipo']
@@ -49,6 +54,19 @@ class EspecializacaoTutorForm(admin.ModelAdmin):
     search_fields = ['id_tutor']
     list_filter = ['id_sub_area_conhecimento']
     autocomplete_fields = ['id_tutor', 'id_sub_area_conhecimento']
+
+
+class ComprovanteEspecializacaoForm(admin.ModelAdmin):
+    def tutor(self, obj):
+        return obj.id_especializacao_tutor.id_tutor.nome
+
+    def area(self, obj):
+        return obj.id_especializacao_tutor.id_sub_area_conhecimento.nome
+    
+    list_display = ['tutor', 'area']
+    search_fields = ['id_especializacao_tutor__id_tutor__nome']
+    list_filter = ['id_especializacao_tutor__id_sub_area_conhecimento']
+    raw_id_fields = ['id_especializacao_tutor']
 
 
 class InteresseAlunoForm(admin.ModelAdmin):
@@ -94,11 +112,21 @@ class TutoriaForm(admin.ModelAdmin):
     autocomplete_fields = ['id_tutor', 'id_aluno']
     raw_id_fields = ['id_horario_tutor']
     inlines = [ComprovantePagamentoInline]
+
+
+class ComprovantePagamentoForm(admin.ModelAdmin):
+    readonly_fields = ['id_tutoria', 'data', 'comprovante']
+    list_display = ['id_tutoria', 'data', 'comprovante']
+
+admin.site.register(Contas, ContasForm)
 admin.site.register(Tutores, TutoresForm)
 admin.site.register(Alunos, AlunosForm)
+admin.site.register(AreaConhecimento, AreaConhecimentoForm)
 admin.site.register(SubareasConhecimento, SubareasConhecimentoForm)
 admin.site.register(EspecializacaoTutor, EspecializacaoTutorForm)
 admin.site.register(ComprovanteEspecializacao, ComprovanteEspecializacaoForm)
+admin.site.register(InteresseAluno, InteresseAlunoForm)
 admin.site.register(HorariosTutor, HorariosTutorForm)
 admin.site.register(AvaliacaoTutor, AvaliacaoTutorForm)
 admin.site.register(Tutoria, TutoriaForm)
+admin.site.register(ComprovantePagamento, ComprovantePagamentoForm)
