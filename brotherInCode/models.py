@@ -35,6 +35,7 @@ class Tutores(models.Model):
 class Alunos(models.Model):
     id_aluno = models.AutoField(primary_key=True)
     id_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    nome = models.CharField(max_length=255)
     email = models.EmailField()
     telefone = models.CharField(max_length=11)
     
@@ -66,13 +67,27 @@ class EspecializacaoTutor(models.Model):
     id_especializacao_tutor = models.AutoField(primary_key=True)
     id_tutor = models.ForeignKey(Tutores, on_delete=models.CASCADE)
     id_sub_area_conhecimento = models.ForeignKey(SubareasConhecimento, on_delete=models.CASCADE)
-    comprovante = models.FileField(upload_to='comprovantes/')
     valor = models.FloatField() #vai ser aqui mesmo?
     descricao = models.TextField()
     
     class Meta:
         verbose_name_plural = 'Especializações dos Tutores'
         db_table = 'EspecializacaoTutor'
+
+class ComprovanteEspecializacao(models.Model):
+    TP_COMPROVANTE = (
+        ('D', 'Diploma'),
+        ('C', 'Certificado'),
+        ('O', 'Outros')
+    )
+    id_comprovante_especializacao = models.AutoField(primary_key=True)
+    id_especializacao_tutor = models.ForeignKey(EspecializacaoTutor, on_delete=models.CASCADE)
+    tipo = models.CharField(max_length=1, choices=TP_COMPROVANTE)
+    comprovante = models.FileField(upload_to='comprovantes/especializacao/')
+
+    class Meta:
+        verbose_name_plural = 'Comprovantes de Especialização'
+        db_table = 'ComprovanteEspecializacao'
 
 
 class InteresseAluno(models.Model):
@@ -128,3 +143,14 @@ class Tutoria(models.Model):
     class Meta:
         verbose_name_plural = 'Tutorias'
         db_table = 'Tutoria'
+    
+class ComprovantePagamento(models.Model):
+    id_comprovante_pagamento = models.AutoField(primary_key=True)
+    id_tutoria = models.ForeignKey(Tutoria, on_delete=models.CASCADE)
+    data = models.DateField()
+    comprovante = models.FileField(upload_to='comprovantes/pagamento/')
+    
+    class Meta:
+        verbose_name_plural = 'Comprovantes de Pagamento'
+        db_table = 'ComprovantePagamento'
+    
