@@ -17,6 +17,9 @@ class Contas(models.Model):
     class Meta:
         verbose_name_plural = 'Contas'
         db_table = 'Contas'
+    
+    def __str__(self):
+        return self.banco + ' - ' + self.agencia + ' - ' + self.conta
 
 
 class Tutores(models.Model):
@@ -30,6 +33,9 @@ class Tutores(models.Model):
     class Meta:
         verbose_name_plural = 'Tutores'
         db_table = 'Tutores'
+    
+    def __str__(self):
+        return self.nome
 
 
 class Alunos(models.Model):
@@ -42,6 +48,9 @@ class Alunos(models.Model):
     class Meta:
         verbose_name_plural = 'Alunos'
         db_table = 'Alunos'
+    
+    def __str__(self):
+        return self.nome
 
 
 class AreaConhecimento(models.Model):
@@ -51,6 +60,9 @@ class AreaConhecimento(models.Model):
     class Meta:
         verbose_name_plural = 'Áreas do Conhecimento'
         db_table = 'AreaConhecimento'
+    
+    def __str__(self):
+        return self.nome
 
 
 class SubareasConhecimento(models.Model):
@@ -61,6 +73,9 @@ class SubareasConhecimento(models.Model):
     class Meta:
         verbose_name_plural = 'Subáreas do Conhecimento'
         db_table = 'SubareasConhecimento'
+    
+    def __str__(self):
+        return self.nome + ' - ' + self.id_area_conhecimento.nome
 
 
 class EspecializacaoTutor(models.Model):
@@ -73,6 +88,10 @@ class EspecializacaoTutor(models.Model):
     class Meta:
         verbose_name_plural = 'Especializações dos Tutores'
         db_table = 'EspecializacaoTutor'
+    
+    def __str__(self):
+        return self.id_tutor.nome + ' - ' + self.id_sub_area_conhecimento.nome
+
 
 class ComprovanteEspecializacao(models.Model):
     TP_COMPROVANTE = (
@@ -88,6 +107,9 @@ class ComprovanteEspecializacao(models.Model):
     class Meta:
         verbose_name_plural = 'Comprovantes de Especialização'
         db_table = 'ComprovanteEspecializacao'
+    
+    def __str__(self):
+        return self.id_especializacao_tutor.id_tutor.nome + ' - ' + self.id_especializacao_tutor.id_sub_area_conhecimento.nome + ' - ' + self.tipo
 
 
 class InteresseAluno(models.Model):
@@ -98,6 +120,9 @@ class InteresseAluno(models.Model):
     class Meta:
         verbose_name_plural = 'Interesses dos Alunos'
         db_table = 'InteresseAluno'
+    
+    def __str__(self):
+        return self.id_aluno.nome + ' - ' + self.id_sub_area_conhecimento.nome
 
 
 class HorariosTutor(models.Model):
@@ -110,6 +135,9 @@ class HorariosTutor(models.Model):
     class Meta:
         verbose_name_plural = 'Horários dos Tutores'
         db_table = 'HorariosTutor'
+    
+    def __str__(self):
+        return self.id_tutor.nome + ' - ' + self.dia_semana + ' - ' + self.hora_inicio + ' - ' + self.hora_fim
 
 
 class AvaliacaoTutor(models.Model):
@@ -122,6 +150,9 @@ class AvaliacaoTutor(models.Model):
     class Meta:
         verbose_name_plural = 'Avaliações dos Tutores'
         db_table = 'AvaliacaoTutor'
+    
+    def __str__(self):
+        return self.id_tutor.nome + ' - ' + self.nota
 
 
 class Tutoria(models.Model):
@@ -144,6 +175,10 @@ class Tutoria(models.Model):
         verbose_name_plural = 'Tutorias'
         db_table = 'Tutoria'
     
+    def __str__(self):
+        return self.id_aluno.nome + ' - ' + self.id_tutor.nome + ' - ' + self.id_sub_area_conhecimento.nome
+
+
 class ComprovantePagamento(models.Model):
     id_comprovante_pagamento = models.AutoField(primary_key=True)
     id_tutoria = models.ForeignKey(Tutoria, on_delete=models.CASCADE)
@@ -154,3 +189,5 @@ class ComprovantePagamento(models.Model):
         verbose_name_plural = 'Comprovantes de Pagamento'
         db_table = 'ComprovantePagamento'
     
+    def __str__(self):
+        return self.id_tutoria.id_aluno.nome + ' - ' + self.id_tutoria.id_tutor.nome + ' - ' + str(self.data)
