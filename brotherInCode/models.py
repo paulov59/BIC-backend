@@ -145,7 +145,7 @@ class AvaliacaoTutor(models.Model):
     id_tutor = models.ForeignKey(Tutores, on_delete=models.CASCADE)
     id_aluno = models.ForeignKey(Alunos, on_delete=models.CASCADE)
     nota = models.PositiveIntegerField()
-    comentario = models.TextField()
+    comentario = models.TextField(null=True, blank=True)
     
     class Meta:
         verbose_name_plural = 'Avaliações dos Tutores'
